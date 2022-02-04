@@ -1,19 +1,10 @@
-#include "MP_Trajedy.h"
+#pragma once
 
 namespace mp_trajedy {
-  class MP_Trajedy : public RobotControl {
+  class MP_Trajedy {
    public:
-    MP_Trajedy(Config &config);
-    ~MP_Trajedy();
-
-    Config *getConfig() {
-      return &_config;
-    }
 
    private:
-    Config &_config
 
   };
 }
-
-//get rest ;)
