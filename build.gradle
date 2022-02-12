@@ -1,0 +1,10 @@
+plugins {
+  id "cpp"
+}
+
+project.ext.set('projectRoot', "$projectDir")
+apply from: project.file("$projectRoot/mainBuilder.gradle")
+
+wrapper {
+  gradleVersion = '7.3.3'
+}

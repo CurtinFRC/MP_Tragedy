@@ -1,0 +1,23 @@
+
+apply plugin: 'cpp'
+
+model {
+  components {
+    mP_Trajedy(NativeLibrarySpec) {
+      sources {
+        cpp {
+          source {
+            srcDir "src/cpp"
+            include "**/*.cpp", "**/*.cc"
+          }
+
+          exportedHeaders {
+            srcDir "src/include"
+          }
+
+          binaries.all {}
+        }
+      }
+    }
+  }
+}
