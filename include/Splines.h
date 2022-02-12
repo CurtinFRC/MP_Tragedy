@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 #include <iostream>
 #ifdef __linux__ 
@@ -16,6 +18,7 @@
 // Giving progress bar defines. (60 wide)
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
+
 
 class Splines {
  public:
@@ -36,20 +39,20 @@ class Splines {
     double segmentNum = 0; // number of segments in spline with a value
   };
 
-  static int buildPath(Spline &spline, int removeNodes = 0);
-  static double calculateSegLength(int node, Spline spline);
+  int buildPath(Spline &spline, int removeNodes = 0);
+  double calculateSegLength(int node, Spline spline);
 
-  static void setStepSize(double step) {
+  void setStepSize(double step) {
     _stepSize = step;
   };
 
-  static SplinePoint getSplinePoint(float t, Spline spline);
-  static SplinePoint getSplineGradientPoint(float t, Spline spline);
-  static double getSplineAngleRad(float t, Spline spline);
-  static void printProgress(double percentage);
-  static double getSplineAngleDeg(double t, Spline spline);
+  SplinePoint getSplinePoint(float t, Spline spline);
+  SplinePoint getSplineGradientPoint(float t, Spline spline);
+  double getSplineAngleRad(float t, Spline spline);
+  void printProgress(double percentage);
+  double getSplineAngleDeg(float t, Spline spline);
 
  private:
-  static double splineLength;
-  static double _stepSize;
+  double splineLength = 0;
+  double _stepSize = 0.001;
 };

@@ -1,66 +1,30 @@
 #include "RobotControl.h"
 #include "Splines.h"
 
-double RobotControl::dist2t(double distance, Splines::Spline spline) {
-  int segment = 0;
+// Splines::SplinePoint RobotControl::locationOnPath(float t, Spline spline) {
+//   SplinePoint robotCoords = getSplinePoint(t, spline);
 
-  std::cout << "Break before loop" << std::endl;
+//   return robotCoords;
+// }
 
-  for (int i = 0; i < spline.waypoints.size(); i++) {
-    if (distance > spline.waypoints[segment].totalLength) {
-      segment++;
-      break;
-    }
+std::pair<double, double> RobotControl::followSpline(double dt) {
+  std::cout << "\nDistance on spline: " << _path.getLength() << std::endl;
+  double leftPower = 0, rightPower = 0;
+
+  if (_config.distance < _path.getLength()) {
+    leftPower = 0.25;
+    rightPower = 0.25;
+
+
+
+    double goalAngle = _path.getAngleDeg(_config.distance);
+    double robotAngle = _config.gyro;
+    std::cout << "\nGoal Angle: " << goalAngle << std::endl;
+
+    // double output = _anglePID.calculate(robotAngle, goalAngle, dt);
+ 
+    // leftPower += output;  // replace with anglePID
+    // rightPower -= output;  // replace with anglePID
   }
-
-  std::cout << "Break after loop" << std::endl;
-
-  std::cout << "Segment: " << segment << std::endl;
-
-  double distanceAlongSegment = 0;
-  if (segment != 0) {
-    distanceAlongSegment = distance - spline.waypoints[segment-1].totalLength;
-  } else {
-    distanceAlongSegment = distance;
-  }
-
-  // scaledNum = ((x-a)*(d-c)/(b-a))+c
-  double oldRange = (spline.waypoints[segment].segLength - 0);
-  double newRange = (1-0);
-
-  double t = (((distanceAlongSegment - 0) * newRange) / oldRange) + 0;
-
-  return t+segment;
-}
-
-float RobotControl::tValue(double encoderRotations, double splineLength) {
-  double meters = encoderRotations / splineLength;
-  float t = meters / 16;
-  
-  std::cout << "\nrotations: " << encoderRotations << std::endl;
-  std::cout << "meters: " << meters << std::endl;
-  std::cout << "t: " << t << std::endl;
-
-  return t;
-}
-
-Splines::SplinePoint RobotControl::locationOnPath(float t, Splines::Spline spline) {
-  Splines::SplinePoint robotCoords = Splines::getSplinePoint(t, spline);
-
-  return robotCoords;
-}
-
-double RobotControl::followSpline(float t, Splines::Spline spline) {
-  double motorSpeeds [2];
-
-  // SplinePoint gradient = CatmullRom::getSplineGradientPoint(t, spline);
-
-
-  double angle = Splines::getSplineAngleDeg(t, spline);
-   
-  // std::cout << "angle x: " << angle.waypoint.x << std::endl;
-  std::cout << "Goal Angle: " << angle << std::endl;
-  // std::cout << "Distance along segment: " << dist2t()
-  
-  return 0;
+  return {leftPower, rightPower};
 }

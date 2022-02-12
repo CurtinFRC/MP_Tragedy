@@ -1,10 +1,5 @@
 #pragma once
 
-namespace mp_trajedy {
-  class MP_Trajedy {
-   public:
-
-   private:
-
-  };
-}
+#include <iostream>
+#include "RobotControl.h"
+#include "Splines.h"

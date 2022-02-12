@@ -1,8 +1,5 @@
 #include "Splines.h"
 
-double Splines::_stepSize = 0.001;
-double Splines::splineLength = 0;
-
 // Calculate segmentation length (returns -1 if there was an issue)
 double Splines::calculateSegLength(int node, Spline spline) {
   double segLength = 0;
@@ -174,6 +171,6 @@ double Splines::getSplineAngleRad(float t, Spline spline) {
 /**
  * Get angle in degrees based from t value and spline
  */
-double Splines::getSplineAngleDeg(double t, Spline spline) {
+double Splines::getSplineAngleDeg(float t, Spline spline) {
   return (getSplineAngleRad(t, spline) * 180 / M_PI); // convert radians to degrees
 }

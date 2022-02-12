@@ -1,3 +1,4 @@
+#pragma once
 #include <math.h>
 #include <iostream>
 #ifdef __linux__ 
@@ -6,17 +7,40 @@
   #include <iomanip>
 #endif
 
-#include "Splines.h"
+#include "PID.h"
+#include "Trajectory.h"
 
 
 class RobotControl {
  public:
-  static float tValue(double encoderRotations, double splineLength);
-  static Splines::SplinePoint locationOnPath(float t, Splines::Spline spline);
-  static double followSpline(float t, Splines::Spline spline);
-  static double dist2t(double distance, Splines::Spline spline);
+  struct Config {
+    double &distance;  // avarage distance between two encoders
+    double &gyro;
+  };
+
+  RobotControl(Trajectory path, Config config, PID anglePID) : _path(path), _config(config), _anglePID(anglePID) {
+    _anglePID.setWrap(180);
+  }
+
+  Splines::SplinePoint locationOnPath();
+  std::pair<double, double> followSpline(double dt);
+
+
+  Config getConfig() {
+    return _config;
+  }
+
+  PID &getAnglePID() {
+    return _anglePID;
+  }
 
  private:
+  Trajectory _path;
+  Config _config;
   float t = 0.0;
   double totalRotations = 0;
+
+  // PID _linearPID;
+  PID _anglePID;
+  
 };
