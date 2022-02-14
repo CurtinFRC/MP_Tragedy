@@ -18,12 +18,18 @@ class RobotControl {
     double &gyro;
   };
 
+  struct FollowInfo {
+    bool is_done;
+    double left, right;
+    double goal_angle;
+  };
+
   RobotControl(Trajectory path, Config config, PID anglePID) : _path(path), _config(config), _anglePID(anglePID) {
     _anglePID.setWrap(180);
   }
 
   Splines::SplinePoint locationOnPath();
-  std::pair<double, double> followSpline(double dt);
+  FollowInfo followSpline(double dt);
 
 
   Config getConfig() {
