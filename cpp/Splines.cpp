@@ -108,13 +108,18 @@ Splines::SplinePoint Splines::getSplinePoint(float t, Spline spline) {
   float tt = t * t;
   float ttt = tt * t;
 
-  float q1 = -ttt + 2.0f*tt - t;
-  float q2 = 3.0f*ttt - 5.0f*tt + 2.0f;
-  float q3 = -3.0f*ttt + 4.0f*tt + t;
+  // float q1 = -ttt + 2.0f*tt - t;
+  // float q2 = 3.0f*ttt - 5.0f*tt + 2.0f;
+  // float q3 = -3.0f*ttt + 4.0f*tt + t;
+  // float q4 = ttt - tt;
+
+  float q1 = 2.0f*ttt - 3.0f*tt + 1;
+  float q2 = ttt - 2.0f*tt + t;
+  float q3 = -2.0f*ttt + 3.0f*tt;
   float q4 = ttt - tt;
 
-  float tx = 0.5f * (spline.waypoints[p0].x * q1 + spline.waypoints[p1].x * q2 + spline.waypoints[p2].x * q3 + spline.waypoints[p3].x * q4);
-  float ty = 0.5f * (spline.waypoints[p0].y * q1 + spline.waypoints[p1].y * q2 + spline.waypoints[p2].y * q3 + spline.waypoints[p3].y * q4);
+  float tx =  (spline.waypoints[p0].x * q1 + spline.waypoints[p1].x * q2 + spline.waypoints[p2].x * q3 + spline.waypoints[p3].x * q4);
+  float ty =  (spline.waypoints[p0].y * q1 + spline.waypoints[p1].y * q2 + spline.waypoints[p2].y * q3 + spline.waypoints[p3].y * q4);
   
   // Detect if it's actually a number and isn't INF or NaN
   if (isinf(tx) || isinf(ty) || isnan(tx) || isnan(ty)) {
@@ -140,13 +145,18 @@ Splines::SplinePoint Splines::getSplineGradientPoint(float t, Spline spline) {
   float tt = t * t;
   // float ttt = tt * t;
 
-  float q1 = -3.0f * tt + 4.0f*t - 1;
-  float q2 = 9.0f*tt - 10.0f*t;
-  float q3 = -9.0f*tt + 8.0f*t + 1.0f;
+  // float q1 = -3.0f * tt + 4.0f*t - 1;
+  // float q2 = 9.0f*tt - 10.0f*t;
+  // float q3 = -9.0f*tt + 8.0f*t + 1.0f;
+  // float q4 = 3.0f*tt - 2.0f*t;
+
+  float q1 = 6.0f * tt - 6.0f*t;
+  float q2 = 3.0f*tt - 4.0f*t + 1;
+  float q3 = 6.0f*t - 6.0f*tt;
   float q4 = 3.0f*tt - 2.0f*t;
 
-  float tx = 0.5f * (spline.waypoints[p0].x * q1 + spline.waypoints[p1].x * q2 + spline.waypoints[p2].x * q3 + spline.waypoints[p3].x * q4);
-  float ty = 0.5f * (spline.waypoints[p0].y * q1 + spline.waypoints[p1].y * q2 + spline.waypoints[p2].y * q3 + spline.waypoints[p3].y * q4);
+  float tx = (spline.waypoints[p0].x * q1 + spline.waypoints[p1].x * q2 + spline.waypoints[p2].x * q3 + spline.waypoints[p3].x * q4);
+  float ty = (spline.waypoints[p0].y * q1 + spline.waypoints[p1].y * q2 + spline.waypoints[p2].y * q3 + spline.waypoints[p3].y * q4);
 
   // Detect if it's actually a number and isn't INF or NaN
   if (isinf(tx) || isinf(ty) || isnan(tx) || isnan(ty)) {
