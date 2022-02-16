@@ -19,7 +19,7 @@ class RobotControl {
     double goal_angle;
   };
 
-  RobotControl(Trajectory path, PID anglePID) : _path(path), _anglePID(anglePID) {
+  RobotControl(Trajectory path, PID anglePID, PID distancePID) : _path(path), _anglePID(anglePID), _distancePID(distancePID) {
     _anglePID.setWrap(180);
   }
 
@@ -35,9 +35,9 @@ class RobotControl {
   float t = 0.0;
   double totalRotations = 0;
 
-  double _maxSpeed = 0;
+  double _accSpeed = 0;
 
-  // PID _linearPID;
   PID _anglePID;
+  PID _distancePID;
   
 };
