@@ -1,5 +1,6 @@
 #include "RobotControl.h"
 #include "Splines.h"
+#include "math.h"
 
 // Splines::SplinePoint RobotControl::locationOnPath(float t, Spline spline) {
 //   SplinePoint robotCoords = getSplinePoint(t, spline);
@@ -7,24 +8,28 @@
 //   return robotCoords;
 // }
 
-std::pair<double, double> RobotControl::followSpline(double dt) {
+RobotControl::FollowInfo RobotControl::followSpline(double dt, double distance, double gyro) {
   std::cout << "\nDistance on spline: " << _path.getLength() << std::endl;
-  double leftPower = 0, rightPower = 0;
+  FollowInfo info;
 
-  if (_config.distance < _path.getLength()) {
-    leftPower = 0.25;
-    rightPower = 0.25;
+  _maxSpeed = std::min(_maxSpeed + 0.3 * dt, 0.3);
 
+  if (distance < _path.getLength()) {
+    info.left = _maxSpeed;
+    info.right = _maxSpeed;
 
+    info.goal_angle = (_path.getAngleDeg(distance) - _path.getAngleDeg(0));
+    double robotAngle = gyro;
+    std::cout << "\nGoal Angle: " << info.goal_angle << std::endl;
 
-    double goalAngle = _path.getAngleDeg(_config.distance);
-    double robotAngle = _config.gyro;
-    std::cout << "\nGoal Angle: " << goalAngle << std::endl;
-
-    // double output = _anglePID.calculate(robotAngle, goalAngle, dt);
+    double output = _anglePID.calculate(robotAngle, info.goal_angle, dt);
  
-    // leftPower += output;  // replace with anglePID
-    // rightPower -= output;  // replace with anglePID
+    info.left += output;  // replace with anglePID
+    info.right -= output;  // replace with anglePID
+
+    info.is_done = false;
+  } else {
+    info.is_done = true;
   }
-  return {leftPower, rightPower};
+  return info;
 }

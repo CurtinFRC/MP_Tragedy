@@ -57,6 +57,7 @@ double Splines::calculateSegLength(int node, Spline spline) {
  */
 int Splines::buildPath(Spline &spline, int removeNodes) {
   int nodeNum = spline.waypoints.size();
+
   std::cout << "-- Calculating Length of spline --" << std::endl;
   std::cout << "-- Total Nodes: " << nodeNum << std::endl;
   for (size_t node = removeNodes; node < nodeNum - removeNodes; node++) {

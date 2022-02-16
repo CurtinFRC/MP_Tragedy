@@ -21,7 +21,7 @@ class PID {
     double derror = (error - previousError) / dt;
     sum += error * dt;
 
-    double output = _gains.kP * error + PID::_gains.kI * sum + _gains.kD * derror;
+    double output = _gains.kP * error + _gains.kI * sum + _gains.kD * derror;
 
     previousError = error;
     previousOutput = output;
