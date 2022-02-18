@@ -9,8 +9,9 @@
 // }
 
 RobotControl::FollowInfo RobotControl::followSpline(double dt, double distance, double gyro) {
-  std::cout << "\nDistance on spline: " << _path.getLength() << std::endl;
   FollowInfo info;
+
+  std::cout << "\nDistance on spline: " << _path.getLength() << std::endl;
 
   _accSpeed += 0.3 * dt;
 
@@ -22,10 +23,19 @@ RobotControl::FollowInfo RobotControl::followSpline(double dt, double distance, 
   info.left = speed;
   info.right = speed;
 
+  // if (gyro > (info.goal_angle-5) && gyro < (info.goal_angle+5)) {
+  if (std::abs(speed) < 0.05) {
+    // getGains.scheduleGains(0.002, 0.001, 0.002);
+    getAnglePID().getGains().scheduleGains(0.003, 0.0025, 0);
+  } else {
+    // getGains.scheduleGains(0.002, 0, 0);
+    getAnglePID().getGains().scheduleGains(0.0025, 0.001, 0);
+  }
+
   if (distance < _path.getLength())
-    info.goal_angle = (_path.getAngleDeg(distance) - _path.getAngleDeg(0));
+    info.goal_angle = (_path.getAngleDeg(distance));
   else 
-    info.goal_angle = (_path.getAngleDeg(_path.getLength() - 0.01) - _path.getAngleDeg(0));
+    info.goal_angle = (_path.getAngleDeg(_path.getLength() - 0.01));
   
   double robotAngle = gyro;
   std::cout << "\nGoal Angle: " << info.goal_angle << std::endl;

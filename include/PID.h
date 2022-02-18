@@ -4,12 +4,21 @@ class PID {
  public:
   struct Gains {
     double kP,kI,kD;
+    void scheduleGains(double p, double i, double d){
+      kP = p;
+      kI = i;
+      kD = d;
+    }
   };
 
   PID(Gains gains) : _gains(gains) {} // P=0.1-0.3, I=0, D=0
 
   void setWrap(double range) {
     _wrapRange = range;
+  }
+
+  Gains &getGains() {
+    return _gains;
   }
   
   double previousOutput = 0;
@@ -21,6 +30,7 @@ class PID {
     double derror = (error - previousError) / dt;
     sum += error * dt;
 
+    
     double output = _gains.kP * error + _gains.kI * sum + _gains.kD * derror;
 
     previousError = error;

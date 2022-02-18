@@ -30,6 +30,10 @@ class RobotControl {
     return _anglePID;
   }
 
+  PID &getDistancePID() {
+    return _distancePID;
+  }
+
  private:
   Trajectory _path;
   float t = 0.0;
@@ -39,5 +43,4 @@ class RobotControl {
 
   PID _anglePID;
   PID _distancePID;
-  
 };
