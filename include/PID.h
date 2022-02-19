@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 class PID {
  public:
@@ -11,7 +12,11 @@ class PID {
     }
   };
 
-  PID(Gains gains) : _gains(gains) {} // P=0.1-0.3, I=0, D=0
+  PID(Gains gains, double isDoneThresh) : _gains(gains), _isDoneThresh(isDoneThresh) {
+    for (int i = 0; i < 20; i++) {
+      _previousDerivs[i] = 0;
+    }
+  } // P=0.1-0.3, I=0, D=0
 
   void setWrap(double range) {
     _wrapRange = range;
@@ -20,21 +25,37 @@ class PID {
   Gains &getGains() {
     return _gains;
   }
-  
-  double previousOutput = 0;
-  double previousError = 0;
-  double sum = 0;
 
+  bool isDone() {
+    double _avgDeriv = 0;
+    for (int i = 0; i < 20; i++) {
+      _avgDeriv += 1.0 / 20.0 * _previousDerivs[i];
+    }
+    return _iterations > 20 && std::abs(_avgDeriv) < _isDoneThresh;
+  }
+
+  void setIsDoneThresh(double thresh) {
+    _isDoneThresh = thresh;
+  }
+
+  void setIZone(double thresh) {
+    _izone = thresh;
+  }
+  
   double calculate(double input, double goal, double dt) {
     double error = wrap(goal - input);
-    double derror = (error - previousError) / dt;
-    sum += error * dt;
+    double derror = (error - _previousError) / dt;
+    _sum += error * dt;
 
+    if (error > _izone) {
+      _sum = 0;
+    }
     
-    double output = _gains.kP * error + _gains.kI * sum + _gains.kD * derror;
+    double output = _gains.kP * error + _gains.kI * _sum + _gains.kD * derror;
 
-    previousError = error;
-    previousOutput = output;
+    _previousError = error;
+    _previousDerivs[_iterations % 20] = derror;
+    _iterations++;
 
     return output;
   }
@@ -53,6 +74,11 @@ class PID {
 
     return val;
   }
+
+  int _iterations = 0;
+  double _previousDerivs[20];
   double _sum = 0;
   double _previousError = 0;
+  double _isDoneThresh = 0;
+  double _izone = std::numeric_limits<double>::max();
 };

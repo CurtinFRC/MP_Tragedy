@@ -46,7 +46,7 @@ RobotControl::FollowInfo RobotControl::followSpline(double dt, double distance, 
   info.right -= output;  // replace with anglePID
 
   // TODO: Come back to this
-  info.is_done = false;
+  info.is_done = _distancePID.isDone() && _anglePID.isDone();
   //   info.is_done = false;
   // } else {
   //   info.is_done = true;
