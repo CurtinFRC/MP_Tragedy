@@ -13,34 +13,34 @@
 
 class RobotControl {
  public:
-  struct Config {
-    double &distance;  // avarage distance between two encoders
-    double &gyro;
+  struct FollowInfo {
+    bool is_done;
+    double left, right;
+    double goal_angle;
   };
 
-  RobotControl(Trajectory path, Config config, PID anglePID) : _path(path), _config(config), _anglePID(anglePID) {
+  RobotControl(Trajectory path, PID anglePID, PID distancePID) : _path(path), _anglePID(anglePID), _distancePID(distancePID) {
     _anglePID.setWrap(180);
   }
 
   Splines::SplinePoint locationOnPath();
-  std::pair<double, double> followSpline(double dt);
-
-
-  Config getConfig() {
-    return _config;
-  }
+  FollowInfo followSpline(double dt, double distance, double gyro);
 
   PID &getAnglePID() {
     return _anglePID;
   }
 
+  PID &getDistancePID() {
+    return _distancePID;
+  }
+
  private:
   Trajectory _path;
-  Config _config;
   float t = 0.0;
   double totalRotations = 0;
 
-  // PID _linearPID;
+  double _accSpeed = 0;
+
   PID _anglePID;
-  
+  PID _distancePID;
 };
